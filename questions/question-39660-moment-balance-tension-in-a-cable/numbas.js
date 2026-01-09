@@ -3933,7 +3933,6 @@ class NumbasExamElement extends HTMLElement {
             const options = {
                 exam_url: this.getAttribute('source_url'),
                 storage:  this.getAttribute('storage')?.toLowerCase(),
-                seed:  this.getAttribute('seed'),
                 element: this
             };
             const exam_source_element = this.querySelector('script[type="application/numbas-exam"]');
@@ -22246,9 +22245,6 @@ Scope.prototype = /** @lends Numbas.jme.Scope.prototype */ {
      * @returns {Numbas.jme.tree}
      */
     expandJuxtapositions: function(tree, options) {
-        if(!tree) {
-            return tree;
-        }
         var scope = this;
         var default_options = {
             singleLetterVariables: true,    // `xy = x*y`
@@ -35339,9 +35335,6 @@ JMEPart.prototype = /** @lends Numbas.JMEPart.prototype */
         var settings = this.settings;
         var answerSimplification = Numbas.jme.collectRuleset(settings.answerSimplificationString, scope.allRulesets());
         var tree = jme.display.subvars(settings.correctAnswerString, scope);
-        if(!tree && this.marks > 0) {
-            this.error('part.jme.answer missing');
-        }
         tree = scope.expandJuxtapositions(
             tree,
             {
@@ -35352,6 +35345,9 @@ JMEPart.prototype = /** @lends Numbas.JMEPart.prototype */
             }
         );
 
+        if(!tree && this.marks > 0) {
+            this.error('part.jme.answer missing');
+        }
         if(this.question) {
             scope = scope.unset(this.question.local_definitions);
         }
@@ -37938,7 +37934,7 @@ Numbas.queueScript('question-display', ['display-util', 'display-base', 'jme-var
 
                 qd.css = document.createElement('style');
                 qd.css.setAttribute('type', 'text/css');
-                const css = `@layer question {\n#question-${q.path} {\n${q.preamble.css}\n}\n}`;
+                const css = `@layer question {\n${q.preamble.css}\n}`;
                 qd.css.appendChild(document.createTextNode(css));
 
                 document.body.append(qd.css);
@@ -40701,8 +40697,6 @@ class SCORMStorage extends Numbas.storage.Storage {
 
 scorm.SCORMStorage = SCORMStorage;
 
-Numbas.storage.storage_classes.scorm = SCORMStorage;
-
 });
 ;
 ﻿Numbas.queueScript('seedrandom',[],function(module) {
@@ -41028,12 +41022,16 @@ Numbas.queueScript('start-exam', ['base', 'util', 'exam', 'settings', 'exam-to-x
         const deps = exam_data.extensions.map((extension) => `extensions/${extension}/${extension}.js`);
 
         const exam = Numbas.awaitScripts(deps).then(() => {
-            const storage_constructor = Numbas.storage.storage_classes[options.storage] || Numbas.storage.Storage;
+            const storages = {
+                scorm: Numbas.storage.scorm.SCORMStorage
+            };
+
+            const storage_constructor = storages[options.storage] || Numbas.storage.Storage;
             const store = new storage_constructor();
 
             Numbas.init_extensions();
 
-            return Numbas.init_exam(examXML, store, options.element, options);
+            return Numbas.init_exam(examXML, store, options.element);
         });
 
         return {exam_data, exam};
@@ -41061,10 +41059,8 @@ Numbas.queueScript('start-exam', ['base', 'util', 'exam', 'settings', 'exam-to-x
      *
      * @returns {Promise.<Numbas.Exam>}
      */
-    Numbas.init_exam = async function(examXML, store, element, options) {
+    Numbas.init_exam = async function(examXML, store, element) {
         await Numbas.init_promise;
-
-        options = options || {};
 
         const scheduler = new Numbas.Scheduler();
         if(element) {
@@ -41076,7 +41072,7 @@ Numbas.queueScript('start-exam', ['base', 'util', 'exam', 'settings', 'exam-to-x
         return new Promise((resolve) => {
             job(function() {
                 var external_seed = store.get_initial_seed();
-                var seed = external_seed || options?.seed || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString();
+                var seed = external_seed || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString();
                 Math.seedrandom(seed);
                 var exam = Numbas.createExamFromXML(examXML, store, element, scheduler);
                 exam.seed = seed;
@@ -41205,10 +41201,8 @@ Numbas.queueScript('storage', ['base'], function() {
  */
 
 var storage = Numbas.storage = {
-    stores: [],
-    storage_classes: {}
+    stores: []
 };
-
 
 /** A blank storage object which does nothing.
  *

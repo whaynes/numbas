@@ -4,7 +4,7 @@
 	<title>Numbas Runtime Test</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="icon" type="image/png" href="numbas-runtime/resources/numbas-icon.png" />
+	<link rel="icon" type="image/png" href="resources/numbas-icon.png" />
 <!-- mathjax stuff -->
 	<script>
 		MathJax = {
@@ -38,21 +38,24 @@
 		}
 		
 		numbas-exam {
-		    border: thin solid red;
+		    border: thin solid #ddd;
 		    display: block;
 		    overflow: auto;
 		    width: 80ch;
 		    margin-inline: auto;
 		}
-		
+
+
+
+       
 		/* This has to be copied from numbas.css because you can't declare a font-face inside a custom component.
 		*/
 		@font-face {
 		  font-family:'FontAwesome';
-		  src:url('numbas-runtime/resources/iconfont/fontawesome.eot?v=3.0.1');
-		  src:url('numbas-runtime/resources/iconfont/fontawesome.eot?#iefix&v=3.0.1') format('embedded-opentype'),
-		  url('numbas-runtime/resources/iconfont/fontawesome.woff?v=3.0.1') format('woff'),
-		  url('numbas-runtime/resources/iconfont/fontawesome.ttf?v=3.0.1') format('truetype');
+		  src:url('resources/iconfont/fontawesome.eot?v=3.0.1');
+		  src:url('resources/iconfont/fontawesome.eot?#iefix&v=3.0.1') format('embedded-opentype'),
+		  url('resources/iconfont/fontawesome.woff?v=3.0.1') format('woff'),
+		  url('resources/iconfont/fontawesome.ttf?v=3.0.1') format('truetype');
 		  font-weight:normal;
 		  font-style:normal
 		}
@@ -68,10 +71,26 @@
 	<p>
 		See <a href="https://docs.numbas.org.uk/en/latest/embedding.html">the documentation on embedding Numbas content in other pages</a>.
 	</p>
-	<ol><li><p>vice grips</p></li></ol>
-	<numbas-exam source_url="questions/question-51010-machine-vice-grips/source.exam">
+	<ol>
+		<li>
+	<p><a href="https://numbas.mathcentre.ac.uk/question/51536/truss-zero-force-members/">truss-zero-force-members</a></p>
+	<numbas-exam source_url="questions/question-59218-truss-zero-force-members/source.exam">
 	<script type="application/json" slot="extension-data">{"geogebra": {"root": "extensions/geogebra", "stylesheets": [], "javascripts": ["geogebra.js"]},  "quantities": {"root": "extensions/quantities","stylesheets": [], "javascripts": ["quantities.js"]}}</script>																																																																	
 	</numbas-exam> 
+	</li>
+	<li>
+	<p><a href="https://numbas.mathcentre.ac.uk/question/39660/moment-balance-tension-in-a-cable/">moment-balance-tension-in-a-cable</a></p>
+	<numbas-exam source_url="questions/question-39660-moment-balance-tension-in-a-cable/source.exam">
+	<script type="application/json" slot="extension-data">{"geogebra": {"root": "extensions/geogebra", "stylesheets": [], "javascripts": ["geogebra.js"]},  "quantities": {"root": "extensions/quantities","stylesheets": [], "javascripts": ["quantities.js"]}}</script>																																																																	
+	</numbas-exam> 
+	</li>
+	<li>
+	<p><a href="https://numbas.mathcentre.ac.uk/question/51010/machine-vice-grips/">machine-vice-grips</a></p>
+	<numbas-exam source_url="https://numbas.mathcentre.ac.uk/question/44824/machine-vice-grips.exam">
+	<script type="application/json" slot="extension-data">{"geogebra": {"root": "extensions/geogebra", "stylesheets": [], "javascripts": ["geogebra.js"]},  "quantities": {"root": "extensions/quantities","stylesheets": [], "javascripts": ["quantities.js"]}}</script>																																																																	
+	</numbas-exam> 
+    </li>
+    </ol>
 
 </main>
 <!-- The template for Numbas exams -->

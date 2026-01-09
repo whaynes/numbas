@@ -1,5 +1,3 @@
-div.GeoGebraFrame {border-style:none !important; background-color: transparent !important;}
-
 @layer no-stylesheet, variables, base, theme, question, user_custom, force;
 
 @layer variables {
